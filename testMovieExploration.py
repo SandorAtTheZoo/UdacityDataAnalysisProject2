@@ -14,6 +14,8 @@ df_movieMoney = pd.read_csv(filename, usecols=moneyFields)
 #convert money fields to float64 for division
 #https://stackoverflow.com/questions/15891038/change-data-type-of-columns-in-pandas
 df_movieMoney[['budget','revenue']] = df_movieMoney[['budget','revenue']].astype(float)
+#now try to change genres to sets to get better groupby performance
+df_commonFields['genres'] = df_commonFields.apply(lambda row: set(row['genres']),axis=1)
 #print df_movieMoney.head()
 
 def rankByMoney(df):
@@ -45,3 +47,6 @@ print df_topMovieMoney.columns
 print df_commonFields.columns
 
 print dfMerged.groupby(dfMerged['director']).groups
+#playing around with list of genre ranking
+#https://stackoverflow.com/questions/19384532/how-to-count-number-of-rows-in-a-group-in-pandas-group-by-object
+print dfMerged.groupby(dfMerged['genres']).size().sort_values(ascending=False)
