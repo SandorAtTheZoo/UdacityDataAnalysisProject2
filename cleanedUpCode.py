@@ -44,21 +44,21 @@ df_movieMoney['moneyRank'] = df_movieMoney.apply(rankByMoney, axis=1).sort_value
 #now get top 500 moneyRanked movies and look for common directors
 df_topMovieMoney = df_movieMoney.sort_values(by=['moneyRank'],ascending=False).head(500)
 
-dfMerged = df_topMovieMoney.merge(df_commonFields,on='id',how='inner',suffixes=('','_'))
+dfMergedMoney = df_topMovieMoney.merge(df_commonFields, on='id', how='inner', suffixes=('', '_'))
 #now fix merge
 #https://stackoverflow.com/questions/40343061/duplicate-columns-with-pandas-merge
-dfMerged.drop('budget_',axis=1,inplace=True)
+dfMergedMoney.drop('budget_', axis=1, inplace=True)
 
 #look at most popular genres for top money makers
-print dfMerged.groupby(dfMerged['genres']).size().sort_values(ascending=False).head()
+print dfMergedMoney.groupby(dfMergedMoney['genres']).size().sort_values(ascending=False).head()
 #look at most popular directors for top money makers
-print dfMerged.groupby(dfMerged['director']).size().sort_values(ascending=False).head()
+print dfMergedMoney.groupby(dfMergedMoney['director']).size().sort_values(ascending=False).head()
 #now look at actors in top money making movies
-print dfMerged.groupby(dfMerged['cast']).size().sort_values(ascending=False).head()
+print dfMergedMoney.groupby(dfMergedMoney['cast']).size().sort_values(ascending=False).head()
 
 ###############by quality
-popularityFields = ['id','vote_average','vote_count']
-df_popular = pd.read_csv(filename,usecols=popularityFields)
+qualityFields = ['id', 'vote_average', 'vote_count']
+df_popular = pd.read_csv(filename, usecols=qualityFields)
 #cast to float for possible division
 df_popular[['vote_average','vote_count']] = df_popular[['vote_average','vote_count']].astype(float)
 print df_popular[['vote_average','vote_count']].describe()
@@ -73,3 +73,14 @@ print df_popular.sort_values('voteValStandardized',ascending=False).head()
 df_popularReviewNumbers = df_popular[df_popular['vote_count']>=38].head(500)
 print df_popularReviewNumbers.sort_values('voteValStandardized',ascending=False).head()
 print len(df_popularReviewNumbers)
+
+#now analyze quality
+dfMergedQuality = df_popularReviewNumbers.merge(df_commonFields, on='id',how='inner')
+print dfMergedQuality.groupby(dfMergedQuality['genres']).size().sort_values(ascending=False).head()
+#look at most popular directors for top quality
+print dfMergedQuality.groupby(dfMergedQuality['director']).size().sort_values(ascending=False).head()
+#now look at actors in top quality movies
+print dfMergedQuality.groupby(dfMergedQuality['cast']).size().sort_values(ascending=False).head()
+
+
+#################by popularity

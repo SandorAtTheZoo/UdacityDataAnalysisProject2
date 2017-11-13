@@ -54,7 +54,7 @@ print dfMerged.head()
 #print df_commonFields.head()
 #print df_commonFields[df_commonFields['id'] == 76341]
 
-# print len(dfMerged)
+# print len(dfMergedMoney)
 #
 # print df_topMovieMoney.columns
 # print df_commonFields.columns
@@ -63,5 +63,5 @@ print dfMerged.groupby(dfMerged['director']).groups
 #playing around with list of genre ranking
 #https://stackoverflow.com/questions/19384532/how-to-count-number-of-rows-in-a-group-in-pandas-group-by-object
 print type(dfMerged['genres'].iloc[424])
-#print dfMerged.groupby(dfMerged['genres']).groups
+#print dfMergedMoney.groupby(dfMergedMoney['genres']).groups
 print dfMerged.groupby(dfMerged['genres']).size().sort_values(ascending=False)
