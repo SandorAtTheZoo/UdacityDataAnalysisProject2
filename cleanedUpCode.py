@@ -102,6 +102,9 @@ topPopularDirectors = dfMergedPopularity.groupby(dfMergedPopularity['director'])
 #now look at actors in top quality movies
 topPopularCast = dfMergedPopularity.groupby(dfMergedPopularity['cast']).size().sort_values(ascending=False).head(10)
 
+
+#PREPARE DATA FOR GRAPHING
+
 #find common genres across 3 measures of movies
 popularGenreList = list(topPopularGenres.index)
 intersectTemp = topPopularGenres.index.intersection(topMoneyGenres.index)
