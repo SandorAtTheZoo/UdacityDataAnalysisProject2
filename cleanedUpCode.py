@@ -158,4 +158,18 @@ plt.show()
 #CREATE SCATTERPLOT OF POPULARITY VS QUALITY -> RUN PEARSON'S R
 
 #CREATE SCATTERPLOT OF QUALITY VS MONEY -> RUN PEARSON'S R
+df_topMoneyScatter = df_movieMoney[df_movieMoney['moneyRank']>0].sort_values(by=['moneyRank'],ascending=False).head(5000)
+df_qualityReviewScatter = df_quality[df_quality['vote_count'] >= 38].sort_values('voteValStandardized', ascending=False).head(len(df_topMoneyScatter))
+#put money on the x axis, and quality on y
+N = len(df_topMoneyScatter)
+x = df_topMoneyScatter['moneyRank']
+print len(df_topMoneyScatter)
+y = df_qualityReviewScatter['voteValStandardized']
+print len(df_qualityReviewScatter)
 
+fig = plt.figure()
+ax = plt.gca()
+plt.scatter(x,y)
+#ax.set_xscale('log')
+#ax.set_yscale('log')
+plt.show()
