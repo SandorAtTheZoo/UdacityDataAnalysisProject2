@@ -112,37 +112,40 @@ df_QualityGenres = pd.DataFrame(topQualityGenres,columns=['genres'])
 df_MoneyGenres = pd.DataFrame(topMoneyGenres,columns=['genres'])
 # genreComparison = df_PopularGenres.merge(df_QualityGenres,on='genres',how='inner')
 
+#doing this eliminates the need to add the ,rsuffix='_1etc' in the join below
+df_PopularGenres = df_PopularGenres.add_suffix('_popular')
+df_QualityGenres = df_QualityGenres.add_suffix('_quality')
+df_MoneyGenres = df_MoneyGenres.add_suffix('_money')
 #THIS GUY!
 #https://stackoverflow.com/questions/26366021/pandas-aligning-multiple-dataframes-with-timestamp-index
-print df_PopularGenres.join(df_QualityGenres,how='inner',rsuffix='_1').join(df_MoneyGenres,how='inner',rsuffix='_2')
-
-
-#print genreComparison
-
-# print pd.concat([topPopularGenres,topMoneyGenres],axis=1).reset_index()
-# testAlignL,testAlignR = topPopularGenres.align(topMoneyGenres,join='inner')
-# comboAlign = pd.concat([testAlignL,testAlignR],axis=1)
-# print comboAlign
+df_GenreResults = df_PopularGenres.join(df_QualityGenres,how='inner').join(df_MoneyGenres,how='inner')
+print df_GenreResults
 
 
 #CREATE BARCHART OF GENRES FROM ALL 3 CATEGORIES
-N=10 #the number of genre categories displayed
+#https://matplotlib.org/examples/api/barchart_demo.html
+N=len(df_GenreResults) #the number of genre categories displayed
 ind = np.arange(N) #x locations for the groups
-width = 0.35
+width = 0.2
 
 fig,ax = plt.subplots()
-rects1 = ax.bar(ind, dfMergedMoney.groupby(dfMergedMoney['genres']).size().sort_values(ascending=False).head(10),width,color='r')
+#rects1 = ax.bar(ind, dfMergedMoney.groupby(dfMergedMoney['genres']).size().sort_values(ascending=False).head(10),width,color='r')
+rects1 = ax.bar(ind, df_GenreResults['genres_popular'], width, color='r')
+rects2 = ax.bar(ind+width, df_GenreResults['genres_quality'], width, color='y')
+rects3 = ax.bar(ind+2*width,df_GenreResults['genres_money'], width, color = 'g')
 
-ax.set_ylabel('Movies of this genre')
-ax.set_title('Top 5% of all movies by genre')
+ax.set_ylabel('# of movies')
+ax.set_title('Number of movies by genre, using different ranking criteria')
 ax.set_xticks(ind+width/2)
 ax.set_xticklabels(popularGenreList)
 #https://stackoverflow.com/questions/10998621/rotate-axis-text-in-python-matplotlib
 plt.xticks(rotation=90)
 #https://stackoverflow.com/questions/6774086/why-is-my-xlabel-cut-off-in-my-matplotlib-plot
-plt.gcf().subplots_adjust(bottom=0.5)
+fig.set_size_inches(8,6)
+plt.tight_layout()
+#subplots_adjust(top = 0.8, bottom=0.7)
+ax.legend((rects1[0], rects2[0],rects3[0]),('Popularity','Quality','Money'))
 
-#ax.legend((rects1[0]),('Money','Quality','Popularity'))
 plt.show()
 #CREATE SCATTERPLOT OF POPULARITY VS MONEY -> RUN PEARSON'S R
 
