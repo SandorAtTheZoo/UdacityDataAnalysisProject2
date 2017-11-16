@@ -71,8 +71,11 @@ print df_quality[['vote_average', 'vote_count']].describe()
 #http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
 df_quality.loc[:, 'voteValStandardized']=((df_quality.loc[:, 'vote_average'] - df_quality.loc[:, 'vote_average'].mean()) / df_quality.loc[:, 'vote_average'].std(ddof=0))
 print df_quality.sort_values('voteValStandardized', ascending=False).head()
-df_qualityReviewNumbers = df_quality[df_quality['vote_count'] >= 38].head(500)
+df_qualityReviewNumbers = df_quality[df_quality['vote_count'] >= 38]
+df_qualityReviewNumbers = df_qualityReviewNumbers.sort_values('voteValStandardized', ascending=False).head(500)
 print df_qualityReviewNumbers.sort_values('voteValStandardized', ascending=False).head()
+print df_qualityReviewNumbers.index
+print df_qualityReviewNumbers.loc[609]
 print len(df_qualityReviewNumbers)
 
 #now analyze quality
