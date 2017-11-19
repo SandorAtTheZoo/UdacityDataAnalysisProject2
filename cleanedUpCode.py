@@ -57,8 +57,8 @@ print dfMergedMoney.groupby(dfMergedMoney['director']).size().sort_values(ascend
 #now look at actors in top money making movies
 print dfMergedMoney.groupby(dfMergedMoney['cast']).size().sort_values(ascending=False).head()
 
-plt.hist(df_movieMoney['moneyRank'],bins = 20)
-plt.show()
+#plt.hist(df_movieMoney['moneyRank'],bins = 20)
+#plt.show()
 
 ###############by quality
 qualityFields = ['id', 'vote_average', 'vote_count']
@@ -159,6 +159,16 @@ plt.show()
 #CREATE SCATTERPLOT OF POPULARITY VS MONEY -> RUN PEARSON'S R
 
 #CREATE SCATTERPLOT OF POPULARITY VS QUALITY -> RUN PEARSON'S R
+N=len(dfPopularity)
+
+df_qualityReviewScatter = df_quality[df_quality['vote_count'] >= 38].sort_values('voteValStandardized', ascending=False)
+x = dfPopularity['popularityStandardized'].head(len(df_qualityReviewScatter))
+y = df_qualityReviewScatter['voteValStandardized']
+dfPearsonPopular = pd.concat([x,y],axis=1)
+print dfPearsonPopular[dfPearsonPopular.columns[0:]].corr(method='pearson')['voteValStandardized'][:-1]
+plt.scatter(x,y)
+plt.show()
+
 
 #CREATE SCATTERPLOT OF QUALITY VS MONEY -> RUN PEARSON'S R
 df_topMoneyScatter = df_movieMoney[df_movieMoney['moneyRank']>0].sort_values(by=['moneyRank'],ascending=False).head(5000)
@@ -169,6 +179,12 @@ x = df_topMoneyScatter['moneyRank']
 print len(df_topMoneyScatter)
 y = df_qualityReviewScatter['voteValStandardized']
 print len(df_qualityReviewScatter)
+
+#https://pandas.pydata.org/pandas-docs/stable/merging.html
+dfPearsonQuality = pd.concat([x,y],axis=1)
+print dfPearsonQuality.head()
+#https://stackoverflow.com/questions/34896455/how-to-do-pearson-correlation-of-selected-columns-of-a-pandas-data-frame
+print dfPearsonQuality[dfPearsonQuality.columns[0:]].corr(method='pearson')['voteValStandardized'][:-1]
 
 plt.scatter(x,y)
 plt.show()
