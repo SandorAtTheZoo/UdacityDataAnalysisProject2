@@ -57,6 +57,9 @@ print dfMergedMoney.groupby(dfMergedMoney['director']).size().sort_values(ascend
 #now look at actors in top money making movies
 print dfMergedMoney.groupby(dfMergedMoney['cast']).size().sort_values(ascending=False).head()
 
+plt.hist(df_movieMoney['moneyRank'],bins = 20)
+plt.show()
+
 ###############by quality
 qualityFields = ['id', 'vote_average', 'vote_count']
 df_quality = pd.read_csv(filename, usecols=qualityFields)
@@ -167,9 +170,5 @@ print len(df_topMoneyScatter)
 y = df_qualityReviewScatter['voteValStandardized']
 print len(df_qualityReviewScatter)
 
-fig = plt.figure()
-ax = plt.gca()
 plt.scatter(x,y)
-#ax.set_xscale('log')
-#ax.set_yscale('log')
 plt.show()
